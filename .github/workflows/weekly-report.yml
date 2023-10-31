@@ -1,0 +1,29 @@
+name: Weekly Issues Report
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'  # This will run the workflow every Monday at 00:00 UTC
+
+jobs:
+  send-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.x
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run script to send report
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+          SLACK_CHANNEL: 'your-slack-channel-id'
+          REPOSITORY: 'your-github-repository-name'
+          ORGANIZATION: 'your-github-organization-name'
+        run: python .github/scripts/send_report.py
